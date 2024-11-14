@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDhM8Ob3z56hDpDw07Xr3FMbrmS6lnJY2cFg&s.jpg" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital@1&family=Otomanopee+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <link rel="stylesheet" href="../assets/styles/food.css" />
+  <title>Food Search Page</title>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar pb-3 pt-3" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../index.html">
+        <i class="fas fa-glass-whiskey" style="color: rgb(17, 110, 163); font-size: 2.5rem">
+          Recipe Finder</i>
+      </a>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a href="./food.html" id="food-search-button" class="button is-link"><strong>Search Food</strong></a>
+          <a href="./drinks.html" id="drinks-search-button" class="button is-link"><strong>Search Drinks</strong></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <section class="hero is-medium is-dark" style="background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDhM8Ob3z56hDpDw07Xr3FMbrmS6lnJY2cFg&s.jpg); background-size:cover; background-repeat: no-repeat; background-blend-mode: soft-light;">
+    <div class="hero-body has-text-centered">
+      <p class="title has-text-centered is-size-2 has-text-primary" id="food-hero-banner">Food Recipe Search</p>
+      <p class="subtitle has-text-centered is-size-3" id="food-hero-subtitle">
+        Find the perfect recipe in minutes! Narrow down your search by focusing on ingredients, diet, or cook time.
+      </p>
+      <section class="section" id="food-form">
+        <form id="food-search-form">
+          <label class="has-text-primary is-size-3" id="ingredient"><strong>Ingredient</strong></label>
+          <input id="food-ingredient-search-input" class="input" type="text" placeholder="Search by ingredient (required)" autocomplete="off" required>
+          <br>
+        
+          <label id="diet-input" class="has-text-primary is-size-3"><strong>Diet</strong></label>
+          <br>
+          <div class="select is-primary">
+            <select id="diet-select">
+              <option selected>Choose preferred diet (optional)</option>
+              <option value="balanced">Balanced</option>
+              <option value="high-fiber">High Fiber</option>
+              <option value="high-protein">High Protein</option>
+              <option value="low-carb">Low Carb</option>
+              <option value="low-fat">Low Fat</option>
+              <option value="low-sodium">Low Sodium</option>
+            </select>
+          </div>          
+          <br>
+
+          <label class="has-text-primary is-size-3" id="cook-time"><strong>Cook Time</strong></label><br>
+
+          <div class="select is-primary">
+            <select id="cook-time-select">
+              <option selected>Choose preferred cook time (optional)</option>
+              <option value="30">Less than 30 minutes</option>
+              <option value="30-60">30 minutes to one hour</option>
+              <option value="60%2B">More than one hour</option>
+            </select>
+          </div>
+            
+          <button class="button is-large is-fullwidth is-success mt-5" type="submit" id="food-return">Search</button>
+        </form>
+      </section>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div id="food-modal" class="modal is-clipped">
+    <div class="modal-background"></div>
+    <div id="modal-content-container" class="modal-content has-background-white py-5 px-5">
+      <!-- Any other Bulma elements you want -->
+    </div>
+    <button class="modal-close is-large" id="close-modal" aria-label="close"></button>
+  </div>
+
+  <!-- Favorites Section -->
+  <section id="favorites-section" class="section">
+    <h1 class="title has-text-centered" id="food-favorites">Favorites</h1>
+    <h2 class="subtitle has-text-centered">
+      Review your saved recipes <strong>here!</strong>
+    </h2>
+    <button id="clear-favorites" class="button is-danger" disabled>Clear Favorites</button>
+    <div id="cards-container" class="columns is-multiline"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        <strong>Skillet & Shaker</strong><br>Created by Chris, Tucker, Brad, and Nick.<br>
+        <a href="https://github.com/likearollinson/recipe-finder"> GitHub Repo</a>.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    // Element variables from food.html
+    const foodSearchFormEl = document.querySelector("#food-search-form");
+    const ingredientSearchInput = document.querySelector("#food-ingredient-search-input");
+    const dietSelectEl = document.querySelector("#diet-select");
+    const timeSelectEl = document.querySelector("#cook-time-select");
+
+    // Variables for modal
+    const foodModal = document.querySelector("#food-modal");
+    const modalCloseBtn = document.querySelector("#close-modal");
+    const modalBg = document.querySelector(".modal-background");
+    const modalContentEl = document.querySelector("#modal-content-container");
+
+    const clearFavoritesBtn = document.querySelector("#clear-favorites");
+    const cardsContainer = document.querySelector("#cards-container");
+
+    // Initiate these variables globally for use in multiple functions
+    let ingredient;
+    let diet;
+    let time;
+
+    // Local storage section
+    let savedFood = JSON.parse(localStorage.getItem("userFoodFavorites") || "[]");
+
+    // Add event listeners to close modal
+    modalCloseBtn.addEventListener("click", () => {
+      foodModal.classList.remove('is-active');
+      modalContentEl.innerHTML = "";
+    });
+
+    modalBg.addEventListener("click", () => {
+      foodModal.classList.remove('is-active');
+      modalContentEl.innerHTML = "";
+    });
+
+    // Search for recipes on form submit
+    foodSearchFormEl.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      ingredient = ingredientSearchInput.value.trim();
+      diet = dietSelectEl.value;
+      time = timeSelectEl.value;
+
+      if (diet === "Choose preferred diet (optional)") {
+        diet = undefined;
+      }
+      if (time === "Choose preferred cook time (optional)") {
+        time = undefined;
+      }
+
+      ingredientSearchInput.value = "";
+      foodModal.classList.add('is-active');
+      getFoodRecipe(ingredient, diet, time);
+    });
+
+    clearFavoritesBtn.addEventListener("click", function(event) {
+      event.preventDefault();
+      localStorage.removeItem("userFoodFavorites");
+      savedFood = [];
+      showFavorites(savedFood);
+    });
+
+    // Variables for food recipe search API
+    const foodURL = "https://api.edamam.com/api/recipes/v2?type=public&q=";
+    const appIDKey = "&app_id=99f65177&app_key=ecb411eb41e5416150875af0c19ffec7";
+
+    // Gets data from Edamam API, conditionals to check for which parameters to use in search
+    function getFoodRecipe(ingredient, diet, time) {
+      let url = foodURL + ingredient + appIDKey;
+      if (diet) url += "&diet=" + diet;
+      if (time) url += "&time=" + time;
+
+      fetch(url)
+        .then(function(response) {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then(function(data) {
+          if (data.count !== 0) {
+            showRecipes(data.hits);
+          } else {
+            throw new Error;
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+          invalidIngredient(ingredient);
+        });
+    }
+
+    // Displays a modal with recipe data for each food found
+    function showRecipes(recipe) {
+      modalContentEl.innerHTML = "";
+
+      for (let i = 0; i < recipe.length; i++) {
+        const recipeCard = document.createElement("div");
+        recipeCard.classList.add("card");
+
+        const recipeImage = document.createElement("img");
+        recipeImage.src = recipe[i].recipe.image;
+        recipeImage.classList.add("card-image");
+
+        const recipeTitle = document.createElement("h2");
+        recipeTitle.textContent = recipe[i].recipe.label;
+        recipeTitle.classList.add("card-content");
+
+        const recipeLink = document.createElement("a");
+        recipeLink.href = recipe[i].recipe.url;
+        recipeLink.classList.add("button", "is-primary", "is-fullwidth");
+        recipeLink.textContent = "See Recipe";
+
+        recipeCard.append(recipeImage, recipeTitle, recipeLink);
+        modalContentEl.append(recipeCard);
+
+        // Add event listener to save favorites when clicked
+        recipeCard.addEventListener("click", function() {
+          saveFavorite(recipe[i]);
+        });
+      }
+    }
+
+    function invalidIngredient(ingredient) {
+      modalContentEl.innerHTML = "<h1>Sorry! No results found for " + ingredient + ".</h1>";
+    }
+
+    function saveFavorite(recipe) {
+      savedFood.push(recipe);
+      localStorage.setItem("userFoodFavorites", JSON.stringify(savedFood));
+      showFavorites(savedFood);
+    }
+
+    // Display saved food on page
+    function showFavorites(savedFood) {
+      cardsContainer.innerHTML = "";
+      if (savedFood.length === 0) {
+        clearFavoritesBtn.disabled = true;
+      } else {
+        clearFavoritesBtn.disabled = false;
+      }
+
+      for (let i = 0; i < savedFood.length; i++) {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const image = document.createElement("img");
+        image.src = savedFood[i].recipe.image;
+        image.classList.add("card-image");
+
+        const title = document.createElement("h2");
+        title.textContent = savedFood[i].recipe.label;
+        title.classList.add("card-content");
+
+        const recipeLink = document.createElement("a");
+        recipeLink.href = savedFood[i].recipe.url;
+        recipeLink.classList.add("button", "is-primary", "is-fullwidth");
+        recipeLink.textContent = "See Recipe";
+
+        card.append(image, title, recipeLink);
+        cardsContainer.append(card);
+      }
+    }
+
+    // Call showFavorites on load if there are saved favorites in localStorage
+    if (savedFood.length !== 0) {
+      showFavorites(savedFood);
+    }
+  </script>
+</body>
+
+</html>
